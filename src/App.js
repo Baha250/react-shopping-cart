@@ -35,6 +35,15 @@ export default class App extends Component {
     }));
  
   }
+  removeFromCart = (itemId) => {
+    const cartInner = this.state.cartItems;
+    const itemIndex = cartInner.findIndex(element => element._id === itemId);
+    
+    const newItems = [...cartInner.slice(0, itemIndex), ...cartInner.slice(itemIndex +1)];
+    this.setState(state => ({
+      cartItems: newItems
+    }))
+  }
 
 
   filterSizeOfProducts = (e) =>{
@@ -103,7 +112,10 @@ export default class App extends Component {
                      />
                   </div>
                   <div className="sidebar">
-                      <Cart cartItems={this.state.cartItems}/>
+                      <Cart 
+                      cartItems={this.state.cartItems}
+                      removeFromCart = {this.removeFromCart}
+                      />
                   </div>
                </div>
               </main>
