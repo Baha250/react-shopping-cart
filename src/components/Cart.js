@@ -2,6 +2,31 @@ import React, { Component } from 'react';
 import formatCurrency from '../util';
 
 class Cart extends Component {
+
+    state={
+        name:"",
+        email:"",
+        address: "",
+        showCheckout:false
+    }
+
+    handleInput = (e) => {
+        this.setState(state=> ({
+            [e.target.name]: e.target.value
+        }))
+    }
+
+    createOrder = (e) => {
+        e.preventDefault();
+        const order = {
+            name: this.state.name,
+            address: this.state.address,
+            email: this.state.email,
+            cartItems: this.props.cartItems
+        }
+        this.props.createOrder(order);
+    }
+
     render() {
         const {cartItems} = this.props
 
@@ -45,18 +70,60 @@ class Cart extends Component {
                     </div>
                     {
                        cartItems.length !==0 &&(
-                            <div className='cart'>
-                                <div className='total'>                                   
-                                    <div>
-                                        Total:{" "}
-                                        {formatCurrency(cartItems.reduce((a, b) => a + (b.price*b.count), 0))}
+                            <div>
+                                <div className='cart'>
+                                    <div className='total'>                                   
+                                        <div>
+                                            Total:{" "}
+                                            {formatCurrency(cartItems.reduce((a, b) => a + (b.price*b.count), 0))}
+                                        </div>
+                                        <button 
+                                        className='button primary'
+                                        onClick={() => this.setState(state => ({
+                                            showCheckout:true
+                                        }))}
+                                        >
+                                            Proceed
+                                        </button>
                                     </div>
-                                    <button className='button primary'>
-                                        Proceed
-                                    </button>
                                 </div>
-                        </div>
-                       ) 
+                                {
+                                    this.state.showCheckout &&(
+                                        <div className='cart'>
+                                            <form onSubmit={this.createOrder}>
+                                                <ul className='form-container'>
+                                                    <li>
+                                                        <label>
+                                                            Email
+                                                        </label>
+                                                        <input name="email" type="email" required onChange={this.handleInput}/>
+                                                    </li>
+                                                    <li>
+                                                        <label>
+                                                            Name
+                                                        </label>
+                                                        <input name="name" type="text" required onChange={this.handleInput}/>
+                                                    </li>
+                                                    <li>
+                                                        <label>
+                                                            Address
+                                                        </label>
+                                                        <input name="address" type="texf" required onChange={this.handleInput}/>
+                                                    </li>
+                                                    <li>
+                                                        <button 
+                                                        tipe="submit"
+                                                        className='button primary'
+                                                        >Checkout</button>
+                                                    </li>
+                                                </ul>
+                                            </form>
+                                        </div>
+                                    )
+                                }
+
+                            </div>                                                       
+                        ) 
                     }
                 </div>
 

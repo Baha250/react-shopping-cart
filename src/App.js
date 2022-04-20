@@ -12,9 +12,12 @@ export default class App extends Component {
       products: data.products,
       size:"",
       sort:"",
-      cartItems: []
+      cartItems: localStorage.getItem("cartItems")? JSON.parse(localStorage.getItem("cartItems")):[]
 
     };
+  }
+  createOrder = (order) => {
+    alert(`Need to save order for ${order.name}`);
   }
   addToCart=(product)=>{
     
@@ -33,16 +36,18 @@ export default class App extends Component {
     this.setState(state => ({
       cartItems
     }));
+    localStorage.setItem("cartItems", JSON.stringify(cartItems));
  
   }
   removeFromCart = (itemId) => {
     const cartInner = this.state.cartItems;
     const itemIndex = cartInner.findIndex(element => element._id === itemId);
     
-    const newItems = [...cartInner.slice(0, itemIndex), ...cartInner.slice(itemIndex +1)];
+    const cartItems = [...cartInner.slice(0, itemIndex), ...cartInner.slice(itemIndex +1)];
     this.setState(state => ({
-      cartItems: newItems
+      cartItems
     }))
+    localStorage.setItem("cartItems", JSON.stringify(cartItems));
   }
 
 
@@ -115,6 +120,7 @@ export default class App extends Component {
                       <Cart 
                       cartItems={this.state.cartItems}
                       removeFromCart = {this.removeFromCart}
+                      createOrder = {this.createOrder}
                       />
                   </div>
                </div>
